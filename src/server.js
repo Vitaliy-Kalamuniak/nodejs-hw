@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from "dotenv";
+import 'dotenv/config';
 import pino from 'pino-http';
 
-dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -43,7 +42,7 @@ app.get('/notes/:noteId', (req, res) => {
 });
 
 app.get('/test-error', (req, res, next) => {
-  throw new Error('Simulated server error');
+  next(new Error('Simulated server error'));
 });
 
 app.use((req, res) => {
@@ -53,12 +52,10 @@ app.use((req, res) => {
 );
 });
 
+
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
-  res.status(500).json({
-  "message": "Simulated server error"
-}
-);
+  res.status(500).json({ message: err.message });
 });
 
 
