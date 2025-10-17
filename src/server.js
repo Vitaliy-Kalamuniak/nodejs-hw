@@ -9,6 +9,8 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 import notesRoutes from './routes/notesRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import cookieParser from "cookie-parser";
 
 const app = express();
 const PORT = process.env.PORT || 3030;
@@ -19,13 +21,15 @@ app.use(express.json({
   type: ['application/json', 'application/vnd.api+json'],
 }));
 app.use(cors());
+app.use(cookieParser());
 
 await connectMongoDB();
 
 app.use(notesRoutes);
+app.use(authRoutes);
 
 app.use(notFoundHandler);
-app.use(errors()); 
+app.use(errors());
 app.use(errorHandler);
 
 
